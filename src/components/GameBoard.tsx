@@ -61,7 +61,9 @@ export default function GameBoard({ playerCount, initialState, onReset }: GameBo
   const autoRollTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const rollTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const autoMoveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const boardAreaRef = useRef<HTMLDivElement | null>(null);
   const [lastDice, setLastDice] = useState<Record<number, number | null>>({});
+  const [boardAreaSize, setBoardAreaSize] = useState({ width: 0, height: 0 });
 
   const currentColors = state.colorAssignment[state.currentHumanPlayer];
 
@@ -104,15 +106,34 @@ export default function GameBoard({ playerCount, initialState, onReset }: GameBo
 
   useEffect(() => clearPendingTimers, [clearPendingTimers]);
 
-  const cellSize = useMemo(() => {
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-    // Vertical layout: dice top + board + dice bottom + controls
-    const availableWidth = vw - 24; // 12px padding each side
-    const availableHeight = vh - 340; // top dice ~80 + bottom dice ~80 + banner ~60 + controls ~120
-    const available = Math.min(availableWidth, availableHeight);
-    return Math.floor(Math.max(available, 200) / 15);
+  useEffect(() => {
+    const boardArea = boardAreaRef.current;
+    if (!boardArea) return;
+
+    const updateBoardAreaSize = () => {
+      const rect = boardArea.getBoundingClientRect();
+      setBoardAreaSize({
+        width: Math.max(Math.floor(rect.width), 0),
+        height: Math.max(Math.floor(rect.height), 0),
+      });
+    };
+
+    updateBoardAreaSize();
+
+    const observer = new ResizeObserver(updateBoardAreaSize);
+    observer.observe(boardArea);
+
+    return () => observer.disconnect();
   }, []);
+
+  const cellSize = useMemo(() => {
+    const measuredSize = Math.min(boardAreaSize.width, boardAreaSize.height);
+    const fallbackSize = typeof window === "undefined"
+      ? 300
+      : Math.min(window.innerWidth - 24, window.innerHeight - 420);
+    const boardPixels = measuredSize > 0 ? measuredSize : fallbackSize;
+    return Math.max(1, Math.floor(boardPixels / 15));
+  }, [boardAreaSize.height, boardAreaSize.width]);
 
   const boardSize = cellSize * 15;
 
@@ -286,9 +307,15 @@ export default function GameBoard({ playerCount, initialState, onReset }: GameBo
   const anyRolls = teamDiceData.some((t) => t.total > 0);
 
   return (
-    <div className="flex flex-col items-center justify-between min-h-full py-3 px-2">
+    <div
+      className={`grid h-full w-full justify-items-center gap-y-3 overflow-hidden py-3 px-2 ${
+        player2Colors
+          ? "grid-rows-[auto_auto_minmax(0,1fr)_auto_auto]"
+          : "grid-rows-[auto_auto_minmax(0,1fr)_auto]"
+      }`}
+    >
       {/* Player indicator banner */}
-      <div className="flex flex-col items-center gap-1.5 mb-2">
+      <div className="flex flex-col items-center gap-1.5">
         <motion.div
           key={`${state.currentHumanPlayer}-${currentColors.join()}`}
           initial={{ opacity: 0, scale: 0.9 }}
@@ -357,28 +384,30 @@ export default function GameBoard({ playerCount, initialState, onReset }: GameBo
       </div>
 
       {/* Board */}
-      <svg
-        width={boardSize}
-        height={boardSize}
-        viewBox={`0 0 ${boardSize} ${boardSize}`}
-        className="rounded-xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)]"
-      >
-        <Board cellSize={cellSize} highlightedSquares={highlightedSquares} />
+      <div ref={boardAreaRef} className="flex min-h-0 w-full items-center justify-center self-stretch">
+        <svg
+          width={boardSize}
+          height={boardSize}
+          viewBox={`0 0 ${boardSize} ${boardSize}`}
+          className="rounded-xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)]"
+        >
+          <Board cellSize={cellSize} highlightedSquares={highlightedSquares} />
 
-        {pieceRenderList.map((p) => (
-          <Piece
-            key={`${p.color}-${p.pieceId}`}
-            color={p.color}
-            pieceId={p.pieceId}
-            position={p.position}
-            cellSize={cellSize}
-            highlighted={isPieceHighlighted(p.color, p.pieceId)}
-            count={p.count}
-            othersPresent={p.othersPresent}
-            onClick={() => handlePieceClick({ color: p.color, pieceId: p.pieceId })}
-          />
-        ))}
-      </svg>
+          {pieceRenderList.map((p) => (
+            <Piece
+              key={`${p.color}-${p.pieceId}`}
+              color={p.color}
+              pieceId={p.pieceId}
+              position={p.position}
+              cellSize={cellSize}
+              highlighted={isPieceHighlighted(p.color, p.pieceId)}
+              count={p.count}
+              othersPresent={p.othersPresent}
+              onClick={() => handlePieceClick({ color: p.color, pieceId: p.pieceId })}
+            />
+          ))}
+        </svg>
+      </div>
 
       {/* Player 2 dice (bottom) */}
       {player2Colors && (
@@ -396,7 +425,7 @@ export default function GameBoard({ playerCount, initialState, onReset }: GameBo
       )}
 
       {/* Bottom: score bar + dice distribution + controls */}
-      <div className="flex flex-col items-center gap-2.5 mt-3">
+      <div className="flex flex-col items-center gap-2.5">
         {/* Score bar */}
         <div className="flex gap-5">
           {state.colors.map((cs) => {
