@@ -109,11 +109,24 @@ describe("piece movement", () => {
 
   it("captures opponent piece and gives bonus turn", () => {
     let game = createGame(4);
-    game = rollAndMove(game, 6); // red out at 0
-    game = rollAndMove(game, 6); // red to 6, bonus
-    game = rollAndMove(game, 5); // red to 11
-    const rp = game.colors[colorIndex(game, "red")].pieces[0];
-    expect(rp.position).toBe(11);
+    const greenIdx = colorIndex(game, "green");
+    const redIdx = colorIndex(game, "red");
+
+    game.colors[greenIdx].pieces[0].position = 5;
+    game.colors[greenIdx].pieces[0].isHome = false;
+    game.colors[redIdx].pieces[0].position = 2;
+    game.colors[redIdx].pieces[0].isHome = false;
+    game.currentHumanPlayer = 0;
+    game.phase = "rolling";
+
+    game = rollAndMove(game, 3); // red lands on green and captures
+
+    expect(game.colors[greenIdx].pieces[0].isHome).toBe(true);
+    expect(game.colors[redIdx].pieces[0].position).toBe(5);
+    expect(game.stats.captures.red).toBe(1);
+    expect(game.currentHumanPlayer).toBe(0);
+    expect(game.phase).toBe("rolling");
+    expect(game.message).toContain("capture");
   });
 });
 
@@ -215,6 +228,26 @@ describe("new capture rules", () => {
     expect(game.colors[redIdx].pieces[1].isHome).toBe(true); // remaining red captured
     expect(game.colors[greenIdx].pieces[0].position).toBe(5); // green stays
   });
+
+  it("safe squares do not capture or grant a bonus turn", () => {
+    let game = createGame(4);
+    const redIdx = colorIndex(game, "red");
+    const greenIdx = colorIndex(game, "green");
+
+    game.colors[redIdx].pieces[0].position = 5;
+    game.colors[redIdx].pieces[0].isHome = false;
+    game.colors[greenIdx].pieces[0].position = 8;
+    game.colors[greenIdx].pieces[0].isHome = false;
+    game.currentHumanPlayer = 0;
+    game.phase = "rolling";
+
+    game = rollAndMove(game, 3); // red lands on safe square 8
+
+    expect(game.colors[redIdx].pieces[0].position).toBe(8);
+    expect(game.colors[greenIdx].pieces[0].position).toBe(8);
+    expect(game.stats.captures.red).toBe(0);
+    expect(game.currentHumanPlayer).toBe(1);
+  });
 });
 
 describe("home column entry", () => {
@@ -244,6 +277,24 @@ describe("home column entry", () => {
     game = rollAndMove(game, 1);
     expect(game.colors[redIdx].pieces[0].position).toBe(57);
     expect(game.colors[redIdx].pieces[0].isFinished).toBe(true);
+  });
+
+  it("finishing a piece grants a bonus turn", () => {
+    let game = createGame(4);
+    const redIdx = colorIndex(game, "red");
+
+    game.colors[redIdx].pieces[0].position = 56;
+    game.colors[redIdx].pieces[0].isHome = false;
+    game.currentHumanPlayer = 0;
+    game.phase = "rolling";
+
+    game = rollAndMove(game, 1);
+
+    expect(game.colors[redIdx].pieces[0].isFinished).toBe(true);
+    expect(game.stats.piecesFinished.red).toBe(1);
+    expect(game.currentHumanPlayer).toBe(0);
+    expect(game.phase).toBe("rolling");
+    expect(game.message).toContain("home");
   });
 
   it("overshooting home column doesn't move", () => {

@@ -305,10 +305,12 @@ export default function GameBoard({ playerCount, initialState, onReset }: GameBo
     });
   }, [state.stats.diceRollsByPlayer, state.colorAssignment]);
   const anyRolls = teamDiceData.some((t) => t.total > 0);
+  const totalTrackedRolls = teamDiceData.reduce((sum, team) => sum + team.total, 0);
+  const diceLedgerMinHeight = teamDiceData.length > 2 ? 120 : 72;
 
   return (
     <div
-      className={`grid h-full w-full justify-items-center gap-y-3 overflow-hidden py-3 px-2 ${
+      className={`relative mx-auto grid h-full w-full max-w-[1400px] justify-items-center gap-y-2.5 overflow-hidden px-2 py-3 sm:px-4 sm:py-4 ${
         player2Colors
           ? "grid-rows-[auto_auto_minmax(0,1fr)_auto_auto]"
           : "grid-rows-[auto_auto_minmax(0,1fr)_auto]"
@@ -321,14 +323,13 @@ export default function GameBoard({ playerCount, initialState, onReset }: GameBo
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ type: "spring", stiffness: 300, damping: 20 }}
-          className="flex items-center gap-3 rounded-2xl px-8 py-3.5"
+          className="flex items-center gap-3 rounded-[28px] border border-white/10 px-5 py-3.5 backdrop-blur-xl shadow-[0_28px_70px_-38px_rgba(0,0,0,0.85)] sm:px-7"
           style={{
             background:
               currentColors.length === 1
-                ? `${PLAYER_COLORS[currentColors[0]]}30`
-                : `linear-gradient(135deg, ${currentColors.map((c) => `${PLAYER_COLORS[c]}30`).join(", ")})`,
-            boxShadow: `0 0 24px ${PLAYER_COLORS[currentColors[0]]}50, 0 0 48px ${PLAYER_COLORS[currentColors[0]]}20`,
-            border: `2px solid ${PLAYER_COLORS[currentColors[0]]}70`,
+                ? `linear-gradient(145deg, rgba(0,0,0,0.34), ${PLAYER_COLORS[currentColors[0]]}30)`
+                : `linear-gradient(135deg, rgba(0,0,0,0.34), ${currentColors.map((c) => `${PLAYER_COLORS[c]}30`).join(", ")})`,
+            boxShadow: `0 0 26px ${PLAYER_COLORS[currentColors[0]]}28, 0 24px 50px -28px rgba(0,0,0,0.8)`,
           }}
         >
           <div className="flex gap-2">
@@ -349,12 +350,17 @@ export default function GameBoard({ playerCount, initialState, onReset }: GameBo
               />
             ))}
           </div>
-          <span
-            className="text-xl font-black tracking-wide"
-            style={{ color: PLAYER_COLORS[currentColors[0]] }}
-          >
-            Player {state.currentHumanPlayer + 1}
-          </span>
+          <div className="flex flex-col">
+            <span className="text-[10px] font-black uppercase tracking-[0.35em] text-white/38">
+              Current Turn
+            </span>
+            <span
+              className="text-2xl font-black tracking-[-0.04em]"
+              style={{ color: PLAYER_COLORS[currentColors[0]] }}
+            >
+              Player {state.currentHumanPlayer + 1}
+            </span>
+          </div>
         </motion.div>
 
         <AnimatePresence mode="wait">
@@ -363,7 +369,7 @@ export default function GameBoard({ playerCount, initialState, onReset }: GameBo
             initial={{ opacity: 0, y: -4 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 4 }}
-            className="text-white/50 text-xs font-medium h-4"
+          className="h-4 text-xs font-medium text-white/50"
           >
             {state.message}
           </motion.p>
@@ -384,12 +390,18 @@ export default function GameBoard({ playerCount, initialState, onReset }: GameBo
       </div>
 
       {/* Board */}
-      <div ref={boardAreaRef} className="flex min-h-0 w-full items-center justify-center self-stretch">
+      <div ref={boardAreaRef} className="relative flex min-h-0 w-full items-center justify-center self-stretch">
+        <div
+          className="pointer-events-none absolute inset-0 flex items-center justify-center"
+          aria-hidden="true"
+        >
+          <div className="h-[min(82vw,82vh)] w-[min(82vw,82vh)] rounded-full bg-[radial-gradient(circle,rgba(240,191,96,0.12),transparent_58%)] blur-3xl" />
+        </div>
         <svg
           width={boardSize}
           height={boardSize}
           viewBox={`0 0 ${boardSize} ${boardSize}`}
-          className="rounded-xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)]"
+          className="relative rounded-[28px] shadow-[0_24px_80px_-22px_rgba(0,0,0,0.62)]"
         >
           <Board cellSize={cellSize} highlightedSquares={highlightedSquares} />
 
@@ -425,21 +437,25 @@ export default function GameBoard({ playerCount, initialState, onReset }: GameBo
       )}
 
       {/* Bottom: score bar + dice distribution + controls */}
-      <div className="flex flex-col items-center gap-2.5">
+      <div className="w-full max-w-[560px] rounded-[28px] border border-white/10 bg-black/28 px-4 py-3 backdrop-blur-xl shadow-[0_28px_80px_-36px_rgba(0,0,0,0.82)] sm:px-5">
+        <div className="flex flex-col items-center gap-2.5">
         {/* Score bar */}
-        <div className="flex gap-5">
+        <div className="flex flex-wrap justify-center gap-2.5">
           {state.colors.map((cs) => {
             const done = cs.pieces.filter((p) => p.isFinished).length;
             return (
-              <div key={cs.color} className="flex items-center gap-1.5">
+              <div
+                key={cs.color}
+                className="flex items-center gap-2 rounded-full border border-white/8 bg-white/[0.045] px-3 py-1.5"
+              >
                 <div
-                  className="w-3.5 h-3.5 rounded-full"
+                  className="h-3.5 w-3.5 rounded-full"
                   style={{
                     backgroundColor: PLAYER_COLORS[cs.color],
                     opacity: cs.isComplete ? 0.3 : 1,
                   }}
                 />
-                <span className="text-white/40 text-[11px] font-mono font-bold">
+                <span className="text-[11px] font-mono font-bold text-white/55">
                   {done}/4
                 </span>
               </div>
@@ -448,18 +464,34 @@ export default function GameBoard({ playerCount, initialState, onReset }: GameBo
         </div>
 
         {/* Per-team dice distribution */}
-        {anyRolls && (
-          <div className="flex gap-4 w-full max-w-[400px] justify-center">
+        <div className="w-full" style={{ minHeight: diceLedgerMinHeight }}>
+          <div className="mb-1.5 flex items-center justify-between gap-3 text-[10px] font-black uppercase tracking-[0.3em] text-white/34">
+            <span>Roll Ledger</span>
+            <span>{anyRolls ? `${totalTrackedRolls} rolls tracked` : "Awaiting first toss"}</span>
+          </div>
+          <div className={`grid gap-2 ${teamDiceData.length > 2 ? "grid-cols-2" : "grid-cols-2"}`}>
             {teamDiceData.map((team) => {
               const max = Math.max(...team.rolls.slice(1));
               return (
-                <div key={team.playerIdx} className="flex-1 rounded-lg px-2.5 py-1.5" style={{ background: "rgba(255,255,255,0.04)" }}>
+                <div
+                  key={team.playerIdx}
+                  className="rounded-[22px] border border-white/8 px-3 py-2 transition-opacity"
+                  style={{
+                    background: "rgba(255,255,255,0.04)",
+                    opacity: anyRolls || team.total > 0 ? 1 : 0.68,
+                  }}
+                >
                   {/* Team header */}
-                  <div className="flex items-center gap-1 mb-1">
+                  <div className="mb-1.5 flex items-center gap-1.5">
                     {team.colors.map((c) => (
-                      <div key={c} className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: PLAYER_COLORS[c] }} />
+                      <div key={c} className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: PLAYER_COLORS[c] }} />
                     ))}
-                    <span className="text-white/30 text-[9px] font-mono ml-1">{team.total} rolls</span>
+                    <span className="ml-1 text-[10px] font-black uppercase tracking-[0.25em] text-white/38">
+                      P{team.playerIdx + 1}
+                    </span>
+                    <span className="ml-auto text-[9px] font-mono text-white/34">
+                      {team.total} rolls
+                    </span>
                   </div>
                   {/* Bars */}
                   {[1, 2, 3, 4, 5, 6].map((face) => {
@@ -468,17 +500,20 @@ export default function GameBoard({ playerCount, initialState, onReset }: GameBo
                     const barW = max > 0 ? (count / max) * 100 : 0;
                     const isSix = face === 6;
                     return (
-                      <div key={face} className="flex items-center gap-1" style={{ height: 13 }}>
-                        <span className="font-mono font-bold shrink-0" style={{ fontSize: 9, width: 8, color: isSix ? "rgba(245,190,80,0.7)" : "rgba(255,255,255,0.3)" }}>
+                      <div key={face} className="flex items-center gap-1.5" style={{ height: 13 }}>
+                        <span className="shrink-0 font-mono font-bold" style={{ fontSize: 9, width: 8, color: isSix ? "rgba(245,190,80,0.7)" : "rgba(255,255,255,0.3)" }}>
                           {face}
                         </span>
-                        <div className="flex-1 rounded-full overflow-hidden" style={{ height: 5, background: "rgba(255,255,255,0.08)" }}>
-                          <div className="h-full rounded-full transition-all duration-300" style={{
-                            width: `${barW}%`,
-                            background: isSix ? "rgba(245,190,80,0.5)" : "rgba(255,255,255,0.2)",
-                          }} />
+                        <div className="h-[5px] flex-1 overflow-hidden rounded-full bg-white/8">
+                          <div
+                            className="h-full rounded-full transition-all duration-300"
+                            style={{
+                              width: `${barW}%`,
+                              background: isSix ? "rgba(245,190,80,0.5)" : "rgba(255,255,255,0.2)",
+                            }}
+                          />
                         </div>
-                        <span className="font-mono shrink-0 text-right" style={{ fontSize: 8, width: 30, color: isSix ? "rgba(245,190,80,0.5)" : "rgba(255,255,255,0.25)" }}>
+                        <span className="shrink-0 text-right font-mono" style={{ fontSize: 8, width: 30, color: isSix ? "rgba(245,190,80,0.5)" : "rgba(255,255,255,0.25)" }}>
                           {count} <span style={{ fontSize: 7 }}>{pct}%</span>
                         </span>
                       </div>
@@ -488,40 +523,47 @@ export default function GameBoard({ playerCount, initialState, onReset }: GameBo
               );
             })}
           </div>
-        )}
+        </div>
 
         {/* Controls */}
-        <div className="flex flex-wrap items-center justify-center gap-3">
+        <div className="flex flex-wrap items-center justify-center gap-2">
           {[
             { label: "Auto Roll", value: autoDice, toggle: () => setAutoDice((v) => !v) },
             { label: "Auto Move", value: autoMove, toggle: () => setAutoMove((v) => !v) },
           ].map(({ label, value, toggle }) => (
-            <button key={label} onClick={toggle} className="flex items-center gap-2 py-1">
+            <button
+              key={label}
+              onClick={toggle}
+              className="flex items-center gap-2 rounded-full border border-white/8 bg-white/[0.045] px-3 py-2"
+            >
               <div
-                className="w-8 h-[18px] rounded-full relative transition-colors duration-200"
+                className="relative h-[18px] w-8 rounded-full transition-colors duration-200"
                 style={{ backgroundColor: value ? "rgba(255,255,255,0.3)" : "rgba(255,255,255,0.08)" }}
               >
                 <div
-                  className="absolute top-[2px] w-[14px] h-[14px] rounded-full bg-white transition-all duration-200"
+                  className="absolute top-[2px] h-[14px] w-[14px] rounded-full bg-white transition-all duration-200"
                   style={{ left: value ? 15 : 2, opacity: value ? 1 : 0.4 }}
                 />
               </div>
-              <span className="text-white/40 text-[10px] font-medium">{label}</span>
+              <span className="text-[10px] font-medium uppercase tracking-[0.24em] text-white/46">
+                {label}
+              </span>
             </button>
           ))}
           <button
             onClick={handleRestartGame}
-            className="px-4 py-2 rounded-full bg-white text-slate-950 text-[11px] font-bold shadow-lg hover:bg-white/90 active:scale-[0.98] transition-all"
+            className="rounded-full bg-[#f0d8a0] px-4 py-2 text-[11px] font-black uppercase tracking-[0.24em] text-[#18261f] shadow-lg transition-all hover:bg-[#f5dfad] active:scale-[0.98]"
             style={{ minHeight: 36 }}
           >
             Restart
           </button>
           <button
             onClick={handleChangePlayers}
-            className="text-white/35 text-[10px] font-medium hover:text-white/55 transition-colors"
+            className="text-[10px] font-medium uppercase tracking-[0.24em] text-white/35 transition-colors hover:text-white/55"
           >
             Change Players
           </button>
+        </div>
         </div>
       </div>
 
@@ -532,7 +574,7 @@ export default function GameBoard({ playerCount, initialState, onReset }: GameBo
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center gap-8 z-50"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/72 px-4 backdrop-blur-xl"
           >
             <motion.div
               initial={{ scale: 0, rotate: -10 }}
@@ -543,7 +585,7 @@ export default function GameBoard({ playerCount, initialState, onReset }: GameBo
                 damping: 15,
                 delay: 0.2,
               }}
-              className="text-center"
+              className="w-full max-w-xl rounded-[36px] border border-white/10 bg-black/32 px-6 py-8 text-center shadow-[0_36px_100px_-42px_rgba(0,0,0,0.9)] backdrop-blur-2xl sm:px-8"
             >
               {/* Confetti-like floating circles */}
               <div className="relative">
@@ -595,7 +637,7 @@ export default function GameBoard({ playerCount, initialState, onReset }: GameBo
               </div>
 
               <motion.h2
-                className="text-5xl font-black text-white mb-2"
+                className="mb-2 text-5xl font-black text-white"
                 animate={{ scale: [1, 1.02, 1] }}
                 transition={{ duration: 2, repeat: Infinity }}
               >
@@ -606,13 +648,13 @@ export default function GameBoard({ playerCount, initialState, onReset }: GameBo
               </p>
             </motion.div>
 
-            <div className="flex gap-4">
+            <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:justify-center">
               <motion.button
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
                 onClick={() => setShowStats(true)}
-                className="px-8 py-3.5 rounded-full bg-white/10 border border-white/20 text-white font-bold text-base"
+                className="rounded-full border border-white/20 bg-white/10 px-8 py-3.5 text-base font-bold text-white"
                 whileTap={{ scale: 0.95 }}
                 style={{ minHeight: 48 }}
               >
@@ -624,7 +666,7 @@ export default function GameBoard({ playerCount, initialState, onReset }: GameBo
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 }}
                 onClick={handleRestartGame}
-                className="px-8 py-3.5 rounded-full bg-white text-indigo-950 font-bold text-base shadow-lg"
+                className="rounded-full bg-[#f0d8a0] px-8 py-3.5 text-base font-black text-[#1a2a21] shadow-lg"
                 whileTap={{ scale: 0.95 }}
                 style={{ minHeight: 48 }}
               >

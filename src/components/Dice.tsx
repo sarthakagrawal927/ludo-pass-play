@@ -80,22 +80,27 @@ export default function Dice({
   const displayValue = value ?? 1;
   const primaryColor = PLAYER_COLORS[playerColors[0]];
   const gradientId = `diceGradient-${side}`;
-
+  const statusLabel = active
+    ? (canRoll ? "Tap to roll" : (rolling ? "Rolling" : "Make your move"))
+    : "Stand by";
 
   const borderColor =
     playerColors.length === 1 ? primaryColor : `url(#${gradientId})`;
 
   return (
     <div
-      className="flex flex-col items-center gap-2"
+      className="flex min-w-[116px] flex-col items-center gap-2 rounded-[26px] border border-white/10 bg-black/25 px-3.5 py-2.5 backdrop-blur-xl shadow-[0_18px_40px_-22px_rgba(0,0,0,0.75)]"
       style={{
-        opacity: active ? 1 : 0.35,
-        transition: "opacity 0.3s ease",
+        opacity: active ? 1 : 0.55,
+        transition: "opacity 0.3s ease, transform 0.3s ease",
         pointerEvents: active ? "auto" : "none",
+        transform: active ? "translateY(0)" : "translateY(2px)",
+        boxShadow: active
+          ? `0 18px 48px -24px ${primaryColor}66`
+          : "0 18px 40px -22px rgba(0,0,0,0.75)",
       }}
     >
-      {/* Player label */}
-      <div className="flex items-center gap-1.5 mb-0.5">
+      <div className="flex min-h-[12px] items-center gap-1.5">
         {playerColors.map((c) => (
           <div
             key={c}
@@ -106,6 +111,9 @@ export default function Dice({
             }}
           />
         ))}
+        <span className="text-[10px] font-black uppercase tracking-[0.32em] text-white/35">
+          {active ? "Active" : "Waiting"}
+        </span>
       </div>
 
       <motion.div
@@ -186,15 +194,15 @@ export default function Dice({
         </motion.div>
       </motion.div>
 
-      {canRoll && active && (
+      <div className="min-h-[12px]">
         <motion.p
-          className="text-white/50 text-[10px] font-bold tracking-widest uppercase"
-          animate={{ opacity: [0.3, 0.8, 0.3] }}
-          transition={{ duration: 2, repeat: Infinity }}
+          className="text-center text-[10px] font-bold uppercase tracking-[0.32em] text-[#f0d8a0]/75"
+          animate={{ opacity: active ? [0.45, 1, 0.45] : 0.4 }}
+          transition={active ? { duration: 1.8, repeat: Infinity } : { duration: 0.25 }}
         >
-          Tap to roll
+          {statusLabel}
         </motion.p>
-      )}
+      </div>
     </div>
   );
 }
