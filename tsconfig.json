@@ -1,11 +1,3 @@
 {
-  "extends": "@saas-maker/tsconfig/vite.json",
-  "compilerOptions": {
-    "strict": false,
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "paths": { "@/*": ["./src/*"] }
-  },
-  "include": ["src"],
-  "exclude": ["node_modules"]
+  "extends": "@saas-maker/tsconfig/vite.json"
 }
