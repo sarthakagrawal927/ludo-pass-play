@@ -48,6 +48,11 @@ export default function Board({ cellSize, highlightedSquares }: BoardProps) {
           <feDropShadow dx={0} dy={2} stdDeviation={3} floodColor="rgba(0,0,0,0.15)" />
         </filter>
 
+        {/* Subtle drop shadow for track squares */}
+        <filter id="trackShadow" x="-10%" y="-10%" width="120%" height="120%">
+          <feDropShadow dx={0} dy={1.5} stdDeviation={1} floodColor="rgba(0,0,0,0.06)" />
+        </filter>
+
         {/* Soft glow for highlighted squares */}
         <filter id="highlightGlow" x="-50%" y="-50%" width="200%" height="200%">
           <feGaussianBlur in="SourceGraphic" stdDeviation={2.5} result="blur" />
@@ -81,10 +86,10 @@ export default function Board({ cellSize, highlightedSquares }: BoardProps) {
         y={0}
         width={size}
         height={size}
-        fill="#faf7f2"
-        rx={12}
-        stroke="#e8e4dc"
-        strokeWidth={1.5}
+        fill="#f8fafc"
+        rx={18}
+        stroke="#cbd5e1"
+        strokeWidth={2}
       />
 
       {/* === Home Bases (4 colored corners) === */}
@@ -209,8 +214,9 @@ export default function Board({ cellSize, highlightedSquares }: BoardProps) {
               height={h}
               fill={fill}
               stroke={stroke}
-              strokeWidth={0.8}
-              rx={3}
+              strokeWidth={1}
+              rx={4}
+              filter="url(#trackShadow)"
             />
 
             {/* Star marker for safe and start squares */}
@@ -279,8 +285,9 @@ export default function Board({ cellSize, highlightedSquares }: BoardProps) {
                 height={h}
                 fill={LIGHT_COLORS[color]}
                 stroke={MID_COLORS[color]}
-                strokeWidth={0.8}
-                rx={3}
+                strokeWidth={1}
+                rx={4}
+                filter="url(#trackShadow)"
               />
 
               {/* Arrow on the last home column square (closest to center) */}

@@ -28,7 +28,7 @@ export default function SetupScreen({ onStart }: SetupScreenProps) {
           transition={{ type: "spring", stiffness: 140 }}
           className="relative overflow-hidden rounded-[36px] border border-white/10 bg-black/25 px-6 py-7 backdrop-blur-xl shadow-[0_30px_80px_-35px_rgba(0,0,0,0.85)] sm:px-8 sm:py-9"
         >
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(240,191,96,0.14),transparent_34%),radial-gradient(circle_at_bottom_left,rgba(41,107,76,0.28),transparent_38%)]" />
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(168,85,247,0.15),transparent_34%),radial-gradient(circle_at_bottom_left,rgba(59,130,246,0.20),transparent_38%)]" />
 
           <div className="relative">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#f0d8a0]/20 bg-[#f0d8a0]/10 px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.35em] text-[#f0d8a0]">

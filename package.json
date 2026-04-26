@@ -14,24 +14,25 @@
   "license": "ISC",
   "packageManager": "pnpm@10.32.1",
   "dependencies": {
-    "framer-motion": "^12.38.0",
-    "react": "^19.2.5",
-    "react-dom": "^19.2.5"
+    "framer-motion": "12.38.0",
+    "react": "19.2.5",
+    "react-dom": "19.2.5"
   },
   "devDependencies": {
-    "@saas-maker/eslint-config": "^1.0.1",
-    "@saas-maker/prettier-config": "^1.0.0",
-    "@saas-maker/tsconfig": "^1.0.0",
-    "@tailwindcss/vite": "^4.2.4",
-    "@types/react": "^19.2.14",
-    "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^6.0.1",
-    "tailwindcss": "^4.2.4",
-    "typescript": "^6.0.3",
-    "vite": "^8.0.10",
-    "vite-plugin-pwa": "^1.2.0",
-    "vitest": "^4.1.5",
-    "wrangler": "^4.85.0"
+    "@saas-maker/eslint-config": "workspace:*",
+    "@saas-maker/prettier-config": "workspace:*",
+    "@saas-maker/tsconfig": "workspace:*",
+    "@tailwindcss/vite": "4.2.4",
+    "@types/node": "25.6.0",
+    "@types/react": "19",
+    "@types/react-dom": "19",
+    "@vitejs/plugin-react": "6.0.1",
+    "tailwindcss": "4",
+    "typescript": "6.0.3",
+    "vite": "8.0.10",
+    "vite-plugin-pwa": "1.2.0",
+    "vitest": "4.1.5",
+    "wrangler": "4.85.0"
   },
   "prettier": "@saas-maker/prettier-config"
 }

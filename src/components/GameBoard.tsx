@@ -351,11 +351,15 @@ export default function GameBoard({ playerCount, initialState, onReset }: GameBo
             ))}
           </div>
           <div className="flex flex-col">
-            <span className="text-[10px] font-black uppercase tracking-[0.35em] text-white/38">
+            <motion.span
+              animate={{ opacity: [0.5, 1, 0.5] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+              className="text-[10px] font-black uppercase tracking-[0.35em] text-white/50"
+            >
               Current Turn
-            </span>
+            </motion.span>
             <span
-              className="text-2xl font-black tracking-[-0.04em]"
+              className="text-3xl font-black tracking-[-0.04em]"
               style={{ color: PLAYER_COLORS[currentColors[0]] }}
             >
               Player {state.currentHumanPlayer + 1}
@@ -395,7 +399,7 @@ export default function GameBoard({ playerCount, initialState, onReset }: GameBo
           className="pointer-events-none absolute inset-0 flex items-center justify-center"
           aria-hidden="true"
         >
-          <div className="h-[min(82vw,82vh)] w-[min(82vw,82vh)] rounded-full bg-[radial-gradient(circle,rgba(240,191,96,0.12),transparent_58%)] blur-3xl" />
+          <div className="h-[min(82vw,82vh)] w-[min(82vw,82vh)] rounded-full bg-[radial-gradient(circle,rgba(168,85,247,0.15),transparent_58%)] blur-3xl" />
         </div>
         <svg
           width={boardSize}

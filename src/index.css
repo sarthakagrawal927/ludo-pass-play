@@ -25,12 +25,12 @@ body,
 body {
   position: relative;
   background:
-    radial-gradient(circle at top, rgba(240, 191, 96, 0.16), transparent 24%),
-    radial-gradient(circle at 20% 18%, rgba(37, 98, 66, 0.42), transparent 34%),
-    radial-gradient(circle at 82% 12%, rgba(138, 86, 34, 0.2), transparent 26%),
-    linear-gradient(180deg, #163328 0%, #0b1713 100%);
-  color: #f6efe0;
-  font-family: "Avenir Next", "Trebuchet MS", "Segoe UI", sans-serif;
+    radial-gradient(circle at top, rgba(168, 85, 247, 0.15), transparent 30%),
+    radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.25), transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.15), transparent 40%),
+    linear-gradient(180deg, #0f172a 0%, #020617 100%);
+  color: #f8fafc;
+  font-family: "Inter", "Avenir Next", "Trebuchet MS", "Segoe UI", sans-serif;
 }
 
 body::before,

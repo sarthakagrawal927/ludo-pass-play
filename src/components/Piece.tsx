@@ -179,7 +179,7 @@ export default function Piece({
   const pieceScale = othersPresent ? 0.65 : 1;
   const r = cellSize * 0.32 * pieceScale;
 
-  const touchRadius = Math.max(r + 4, 22);
+  const touchRadius = Math.max(r + 12, 32);
 
   return (
     <motion.g

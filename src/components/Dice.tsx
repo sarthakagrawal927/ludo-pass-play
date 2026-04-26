@@ -76,7 +76,7 @@ export default function Dice({
   side,
   active,
 }: DiceProps) {
-  const size = 68;
+  const size = 80;
   const displayValue = value ?? 1;
   const primaryColor = PLAYER_COLORS[playerColors[0]];
   const gradientId = `diceGradient-${side}`;
