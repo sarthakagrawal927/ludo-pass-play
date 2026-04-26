@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ludo Royale - The Royal Board</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed-dim": "#edc600",
+                        "on-surface": "#4e2120",
+                        "surface": "#fff4f3",
+                        "on-tertiary-fixed": "#433700",
+                        "on-primary-fixed": "#000000",
+                        "surface-tint": "#ab2d00",
+                        "surface-container": "#ffe1e0",
+                        "surface-variant": "#ffd2d0",
+                        "on-secondary-fixed": "#001f9d",
+                        "inverse-surface": "#240304",
+                        "surface-dim": "#ffc7c4",
+                        "primary-fixed-dim": "#ff5d2b",
+                        "secondary-fixed-dim": "#b7c0ff",
+                        "on-tertiary": "#fff2ce",
+                        "secondary": "#2444eb",
+                        "inverse-on-surface": "#ce8c89",
+                        "on-primary-container": "#470e00",
+                        "on-surface-variant": "#834c4b",
+                        "on-error": "#ffefee",
+                        "on-primary": "#ffefeb",
+                        "secondary-dim": "#0934e0",
+                        "on-primary-fixed-variant": "#581300",
+                        "surface-container-high": "#ffdad8",
+                        "surface-container-highest": "#ffd2d0",
+                        "background": "#fff4f3",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-container": "#fdd400",
+                        "tertiary-fixed": "#fdd400",
+                        "tertiary": "#6d5a00",
+                        "error": "#b31b25",
+                        "outline-variant": "#e09c99",
+                        "outline": "#a26765",
+                        "on-secondary-fixed-variant": "#0c36e1",
+                        "secondary-container": "#c9cfff",
+                        "primary-container": "#ff7851",
+                        "primary-fixed": "#ff7851",
+                        "on-background": "#4e2120",
+                        "tertiary-dim": "#5f4e00",
+                        "on-tertiary-fixed-variant": "#645300",
+                        "on-error-container": "#570008",
+                        "secondary-fixed": "#c9cfff",
+                        "surface-bright": "#fff4f3",
+                        "primary-dim": "#962700",
+                        "error-dim": "#9f0519",
+                        "primary": "#ab2d00",
+                        "on-secondary": "#f3f1ff",
+                        "inverse-primary": "#ff5722",
+                        "on-secondary-container": "#002ccf",
+                        "on-tertiary-container": "#594a00",
+                        "error-container": "#fb5151",
+                        "surface-container-low": "#ffedeb"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "display": ["Plus Jakarta Sans"],
+                        "body": ["Plus Jakarta Sans"],
+                        "label": ["Plus Jakarta Sans"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fff4f3; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .ludo-grid { display: grid; grid-template-columns: repeat(15, 1fr); grid-template-rows: repeat(15, 1fr); aspect-ratio: 1/1; }
+        .bento-glass { background: rgba(255, 210, 208, 0.6); backdrop-filter: blur(20px); }
+        .token-shadow { filter: drop-shadow(0 4px 6px rgba(78, 33, 32, 0.2)); }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="text-on-surface selection:bg-primary-container selection:text-on-primary-container overflow-hidden">
+<!-- Top Navigation Shell -->
+<header class="fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-6 py-4 w-full bg-[#fff4f3] dark:bg-stone-950 shadow-[0px_20px_40px_rgba(78,33,32,0.08)] rounded-b-[3rem]">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary transition-transform hover:scale-105 active:scale-95 duration-150">
+<img alt="Player Profile Avatar" data-alt="close-up portrait of a cheerful animated character wearing a small golden crown with warm lighting and soft background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_z-2CFblUeV-iQjUmzZZX-iBTOhH0Xtvt6klyuZZ1tYOIT2o7LO3hm8n6OKiw2GZDTlgonRPCDGsOZbeYXVFhxa5-_-7ViHzQg7Ju15avQ6iM1Mo_HGV-OXPeaVm5Rzdl1KJpqf7D-6vnDDansnVWwbqEYqCjn_Jceh0XeJUtBl5-mO47eJ0JPHmZsTt1zjYI7cCA52tKgca63FVusMZhn4vnQupHbjfVSuh5-AejCJNmZmnN34Dn7vEdyL0y3NqtplrIH4mniL4"/>
+</div>
+<span class="text-[#ab2d00] dark:text-[#ff7851] font-['Plus_Jakarta_Sans'] font-bold text-2xl tracking-tight">Ludo Royale</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-[#ab2d00] p-2 hover:scale-105 transition-transform active:scale-95 duration-150">settings</button>
+</div>
+</header>
+<!-- Navigation Drawer (Social Pulse) -->
+<aside class="fixed inset-y-0 left-0 z-40 flex flex-col p-4 pt-24 h-full rounded-r-[3rem] w-80 bg-[#fff4f3]/60 backdrop-blur-xl dark:bg-stone-950/60 shadow-[0px_20px_40px_rgba(78,33,32,0.1)] hidden md:flex">
+<div class="px-4 mb-6">
+<h2 class="text-xl font-bold text-[#ab2d00] font-['Plus_Jakarta_Sans']">Game Lobby</h2>
+<div class="flex justify-between items-center">
+<p class="text-[#4e2120] opacity-70 font-medium">Social Hub</p>
+<span class="text-[10px] bg-secondary text-white px-2 py-0.5 rounded-full font-bold">12 Online</span>
+</div>
+</div>
+<nav class="flex flex-col gap-1">
+<a class="flex items-center gap-3 bg-gradient-to-br from-[#962700] to-[#ff7851] text-white rounded-full mx-2 my-1 px-4 py-3 shadow-md" href="#">
+<span class="material-symbols-outlined">chat_bubble</span>
+<span class="font-medium">Global Chat</span>
+</a>
+<a class="flex items-center gap-3 text-[#4e2120] hover:bg-[#ffedeb] rounded-full mx-2 my-1 px-4 py-3 transition-colors" href="#">
+<span class="material-symbols-outlined">mood</span>
+<span class="font-medium">Reactions</span>
+</a>
+<a class="flex items-center gap-3 text-[#4e2120] hover:bg-[#ffedeb] rounded-full mx-2 my-1 px-4 py-3 transition-colors" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-medium">Friends Online</span>
+</a>
+<a class="flex items-center gap-3 text-[#4e2120] hover:bg-[#ffedeb] rounded-full mx-2 my-1 px-4 py-3 transition-colors" href="#">
+<span class="material-symbols-outlined">emoji_events</span>
+<span class="font-medium">Leaderboard</span>
+</a>
+</nav>
+<!-- Live Chat Preview (Social Pulse) -->
+<div class="mt-auto p-4 space-y-4">
+<div class="bg-surface-container-lowest p-3 rounded-xl shadow-sm">
+<p class="text-xs font-bold text-primary mb-1">Prince_Ludo</p>
+<p class="text-sm">Nice move on the green block! 🔥</p>
+</div>
+<div class="bg-surface-container-lowest p-3 rounded-xl shadow-sm">
+<p class="text-xs font-bold text-secondary mb-1">QueenBee</p>
+<p class="text-sm">Don't kill my piece please 🥺</p>
+</div>
+<div class="flex gap-2 justify-around py-2">
+<button class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center hover:scale-110 transition-transform">❤️</button>
+<button class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center hover:scale-110 transition-transform">👏</button>
+<button class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center hover:scale-110 transition-transform">😂</button>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="h-screen w-full pt-24 pb-32 md:pl-80 flex items-center justify-center relative overflow-hidden bg-surface">
+<!-- The Royal Board Area -->
+<div class="relative w-full max-w-[min(85vh,85vw)] aspect-square p-4">
+<!-- Floating Player Stats Cards (Four Corners) -->
+<!-- TOP LEFT: Red Player -->
+<div class="absolute -top-4 -left-4 z-20 bg-surface-container-lowest p-4 rounded-xl shadow-xl border-l-8 border-error flex flex-col gap-1 min-w-[140px]">
+<div class="flex items-center gap-2 mb-1">
+<img alt="Player 1" class="w-8 h-8 rounded-full bg-error/10" data-alt="vibrant 3d avatar of a smiling red character in a playful art style with a soft bokeh background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmeaW62XfQ-H5k8qGWdimR6w8O70ANBv15h7y-w003OaKzntMDoh0xWQApUU1EP7IO19JA3VV5Ki6BrFtmCSGpiK0IzjhY3wExTOXleaYraWJCUGuGrYls4XnkpaD_WP61RI3chfHZWUA4WrYkdpMHFGYA7VvNVBnyOSb_vIB3GQ_dCXST3GVgiMsoHwLkqknxc4jEpMH4OuGVIAcSPjtvhAajXNqJKvuwEea8aaliJaMjXAdhhnmUfNFPMs4vH-K6UBGpCZEqtao"/>
+<span class="font-bold text-sm">Prince_Ludo</span>
+</div>
+<div class="flex justify-between text-[10px] font-bold opacity-60"><span>HOME:</span> <span>1/4</span></div>
+<div class="flex justify-between text-[10px] font-bold opacity-60"><span>SAFE:</span> <span>2</span></div>
+<div class="flex justify-between text-[10px] font-bold opacity-60"><span>KILLS:</span> <span>3</span></div>
+</div>
+<!-- TOP RIGHT: Blue Player -->
+<div class="absolute -top-4 -right-4 z-20 bg-surface-container-lowest p-4 rounded-xl shadow-xl border-r-8 border-secondary flex flex-col gap-1 min-w-[140px]">
+<div class="flex items-center gap-2 mb-1">
+<img alt="Player 2" class="w-8 h-8 rounded-full bg-secondary/10" data-alt="vibrant 3d avatar of a smiling blue character in a playful art style with a soft bokeh background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdqf4kRx6keHc0hCER3kd_bWnIjH5T4je8Xf_kc1qXfA7hjQkhKc_jAthpXz6RxcDBfbkmg7o9q1Q_3zuvoKZr9S4KxBgOi71qmKPt_R-1pNUDlarzprBasHJ8XM4uYA9Mxg7W5Z2tY5RvhkMHGa-LwLSPRDLOixbNhu7R1NvgeKsjfh102HBZS0pdSBrbm17S0L3Xs-PzavMAl07yA0naWLXX3o3gVLpalGheUhYhnHA94S9Ba1j_AZYuDOR1UKjUJ61k_Ru1VKM"/>
+<span class="font-bold text-sm">QueenBee</span>
+</div>
+<div class="flex justify-between text-[10px] font-bold opacity-60"><span>HOME:</span> <span>0/4</span></div>
+<div class="flex justify-between text-[10px] font-bold opacity-60"><span>SAFE:</span> <span>1</span></div>
+<div class="flex justify-between text-[10px] font-bold opacity-60"><span>KILLS:</span> <span>1</span></div>
+</div>
+<!-- BOTTOM LEFT: Green Player -->
+<div class="absolute -bottom-4 -left-4 z-20 bg-surface-container-lowest p-4 rounded-xl shadow-xl border-l-8 border-emerald-500 flex flex-col gap-1 min-w-[140px]">
+<div class="flex items-center gap-2 mb-1">
+<img alt="Player 3" class="w-8 h-8 rounded-full bg-emerald-100" data-alt="vibrant 3d avatar of a smiling green character in a playful art style with a soft bokeh background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWty-_XzGT4mFVseJ5l2Af1LTgJ8Qquv93J0kf48MKdJdsVNwnG9G7EIDp842XtvUvdcZjuihBMsmNZO8bc3ZsORio_HSB-lnj3wTmC7VJSQ0V8o9omGDufNQ6tVUWy7k0BEDeEyLnWUked2W8AZCLMtv0ccaPlb4nmsXU2aMIAujfJTAWehp4KAijw4sgPGn1j7EBZ0vX473gluxr7LmcR9VVt6lLdjvNjulmio_eHB8u_A4cOdeHJzb0NByjbTJr9RfSzLtdffg"/>
+<span class="font-bold text-sm">GreenMage</span>
+</div>
+<div class="flex justify-between text-[10px] font-bold opacity-60"><span>HOME:</span> <span>2/4</span></div>
+<div class="flex justify-between text-[10px] font-bold opacity-60"><span>SAFE:</span> <span>3</span></div>
+<div class="flex justify-between text-[10px] font-bold opacity-60"><span>KILLS:</span> <span>0</span></div>
+</div>
+<!-- BOTTOM RIGHT: Yellow Player (Active) -->
+<div class="absolute -bottom-4 -right-4 z-20 bg-primary-container p-4 rounded-xl shadow-xl border-r-8 border-tertiary flex flex-col gap-1 min-w-[140px] ring-4 ring-primary ring-opacity-30">
+<div class="flex items-center gap-2 mb-1">
+<img alt="Player 4" class="w-8 h-8 rounded-full bg-white" data-alt="vibrant 3d avatar of a smiling yellow character with a crown in a playful art style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB8nL5huPZ_hFk5x5tpa7VYMios0muJfNO_8uvtWqfUBTDRtrBEt00_0T9sDi5AwLAQSQytwCZdFnJegEsh5JyAVA8HEjvqDit1391Yv2OKPLk_QjCg7vqSICIK3JwLdRIDVBJnEjgXL7IoeJ9tsJkiT3djjN2XxYNDkSsjZJ1Z_3OfLEuUG7QTH8DQsLU2NHr9ABFBPLEF15SskkaSqDJJAqTz4DRHK6qVEYy7qmEe5E301VKTMHflzi7jUq3N_CQoIYQPis1pjw8"/>
+<span class="font-bold text-sm text-on-primary-container">YOU (Royale)</span>
+</div>
+<div class="flex justify-between text-[10px] font-bold text-on-primary-container/80"><span>HOME:</span> <span>3/4</span></div>
+<div class="flex justify-between text-[10px] font-bold text-on-primary-container/80"><span>SAFE:</span> <span>4</span></div>
+<div class="flex justify-between text-[10px] font-bold text-on-primary-container/80"><span>KILLS:</span> <span>8</span></div>
+</div>
+<!-- Ludo Board (The Royal Board) -->
+<div class="w-full h-full bg-surface-container-lowest rounded-xl shadow-2xl p-4 overflow-hidden ludo-grid gap-1">
+<!-- Red Home (6x6) -->
+<div class="grid-area-[1/1/7/7] bg-error-container rounded-lg p-4 grid grid-cols-2 grid-rows-2 gap-4 col-span-6 row-span-6">
+<div class="bg-white rounded-full flex items-center justify-center p-2"><div class="w-full h-full bg-error rounded-full token-shadow"></div></div>
+<div class="bg-white rounded-full flex items-center justify-center p-2"><div class="w-full h-full bg-error rounded-full token-shadow"></div></div>
+<div class="bg-white rounded-full flex items-center justify-center p-2"><div class="w-full h-full bg-error rounded-full token-shadow"></div></div>
+<div class="bg-white rounded-full flex items-center justify-center p-2"><div class="w-full h-full bg-error rounded-full token-shadow"></div></div>
+</div>
+<!-- Path Top (6x3) -->
+<div class="col-span-3 row-span-6 col-start-7 row-start-1 grid grid-cols-3 grid-rows-6 gap-1">
+<!-- Placeholder cells for brevity -->
+<div class="bg-surface-container rounded-sm"></div><div class="bg-surface-container rounded-sm"></div><div class="bg-surface-container rounded-sm"></div>
+<div class="bg-surface-container rounded-sm"></div><div class="bg-secondary-container rounded-sm"></div><div class="bg-surface-container rounded-sm"></div>
+<div class="bg-surface-container rounded-sm"></div><div class="bg-secondary-container rounded-sm"></div><div class="bg-surface-container rounded-sm"></div>
+<div class="bg-surface-container rounded-sm"></div><div class="bg-secondary-container rounded-sm"></div><div class="bg-surface-container rounded-sm"></div>
+<div class="bg-surface-container rounded-sm"></div><div class="bg-secondary-container rounded-sm"></div><div class="bg-surface-container rounded-sm"></div>
+<div class="bg-surface-container rounded-sm"></div><div class="bg-secondary-container rounded-sm"></div><div class="bg-surface-container rounded-sm"></div>
+</div>
+<!-- Blue Home (6x6) -->
+<div class="grid-area-[1/10/7/16] bg-secondary-container rounded-lg p-4 grid grid-cols-2 grid-rows-2 gap-4 col-span-6 row-span-6">
+<div class="bg-white rounded-full flex items-center justify-center p-2"><div class="w-full h-full bg-secondary rounded-full token-shadow"></div></div>
+<div class="bg-white rounded-full flex items-center justify-center p-2"><div class="w-full h-full bg-secondary rounded-full token-shadow"></div></div>
+<div class="bg-white rounded-full flex items-center justify-center p-2"><div class="w-full h-full bg-secondary rounded-full token-shadow"></div></div>
+<div class="bg-white rounded-full flex items-center justify-center p-2"><div class="w-full h-full bg-secondary rounded-full token-shadow"></div></div>
+</div>
+<!-- Path Left (3x6) -->
+<div class="col-span-6 row-span-3 col-start-1 row-start-7 grid grid-cols-6 grid-rows-3 gap-1">
+<div class="bg-surface-container rounded-sm"></div><div class="bg-error-container rounded-sm"></div><div class="bg-surface-container rounded-sm"></div><div class="bg-surface-container rounded-sm"></div><div class="bg-surface-container rounded-sm"></div><div class="bg-surface-container rounded-sm"></div>
+<div class="bg-surface-container rounded-sm"></div><div class="bg-error-container rounded-sm"></div><div class="bg-error-container rounded-sm"></div><div class="bg-error-container rounded-sm"></div><div class="bg-error-container rounded-sm"></div><div class="bg-error-container rounded-sm"></div>
+<div class="bg-surface-container rounded-sm"></div><div class="bg-surface-container rounded-sm"></div><div class="bg-surface-container rounded-sm"></div><div class="bg-surface-container rounded-sm"></div><div class="bg-surface-container rounded-sm"></div><div class="bg-surface-container rounded-sm"></div>
+</div>
+<!-- Center Home -->
+<div class="col-span-3 row-span-3 col-start-7 row-start-7 bg-white p-1 rounded-sm shadow-inner flex items-center justify-center">
+<div class="w-full h-full grid grid-cols-2 grid-rows-2 gap-1 rotate-45 scale-75">
+<div class="bg-error rounded-bl-full"></div>
+<div class="bg-secondary rounded-br-full"></div>
+<div class="bg-emerald-500 rounded-tl-full"></div>
+<div class="bg-tertiary rounded-tr-full"></div>
+</div>
+</div>
+<!-- Path Right (3x6) -->
+<div class="col-span-6 row-span-3 col-start-10 row-start-7 grid grid-cols-6 grid-rows-3 gap-1">
+<div class="bg-surface-container rounded-sm"></div><div class="bg-surface-container rounded-sm"></div><div class="bg-surface-container rounded-sm"></div><div class="bg-surface-container rounded-sm"></div><div class="bg-surface-container rounded-sm"></div><div class="bg-surface-container rounded-sm"></div>
+<div class="bg-tertiary-container rounded-sm"></div><div class="bg-tertiary-container rounded-sm"></div><div class="bg-tertiary-container rounded-sm"></div><div class="bg-tertiary-container rounded-sm"></div><div class="bg-tertiary-container rounded-sm"></div><div class="bg-surface-container rounded-sm"></div>
+<div class="bg-surface-container rounded-sm"></div><div class="bg-surface-container rounded-sm"></div><div class="bg-surface-container rounded-sm"></div><div class="bg-surface-container rounded-sm"></div><div class="bg-tertiary-container rounded-sm"></div><div class="bg-surface-container rounded-sm"></div>
+</div>
+<!-- Green Home (6x6) -->
+<div class="grid-area-[10/1/16/7] bg-emerald-100 rounded-lg p-4 grid grid-cols-2 grid-rows-2 gap-4 col-span-6 row-span-6">
+<div class="bg-white rounded-full flex items-center justify-center p-2"><div class="w-full h-full bg-emerald-500 rounded-full token-shadow"></div></div>
+<div class="bg-white rounded-full flex items-center justify-center p-2"><div class="w-full h-full bg-emerald-500 rounded-full token-shadow"></div></div>
+<div class="bg-white rounded-full flex items-center justify-center p-2"><div class="w-full h-full bg-emerald-500 rounded-full token-shadow"></div></div>
+<div class="bg-white rounded-full flex items-center justify-center p-2"><div class="w-full h-full bg-emerald-500 rounded-full token-shadow"></div></div>
+</div>
+<!-- Path Bottom (6x3) -->
+<div class="col-span-3 row-span-6 col-start-7 row-start-10 grid grid-cols-3 grid-rows-6 gap-1">
+<div class="bg-surface-container rounded-sm"></div><div class="bg-emerald-100 rounded-sm"></div><div class="bg-surface-container rounded-sm"></div>
+<div class="bg-surface-container rounded-sm"></div><div class="bg-emerald-100 rounded-sm"></div><div class="bg-surface-container rounded-sm"></div>
+<div class="bg-surface-container rounded-sm"></div><div class="bg-emerald-100 rounded-sm"></div><div class="bg-surface-container rounded-sm"></div>
+<div class="bg-surface-container rounded-sm"></div><div class="bg-emerald-100 rounded-sm"></div><div class="bg-surface-container rounded-sm"></div>
+<div class="bg-surface-container rounded-sm"></div><div class="bg-emerald-100 rounded-sm"></div><div class="bg-surface-container rounded-sm"></div>
+<div class="bg-surface-container rounded-sm"></div><div class="bg-emerald-100 rounded-sm"></div><div class="bg-surface-container rounded-sm"></div>
+</div>
+<!-- Yellow Home (6x6) -->
+<div class="grid-area-[10/10/16/16] bg-tertiary-container rounded-lg p-4 grid grid-cols-2 grid-rows-2 gap-4 col-span-6 row-span-6">
+<div class="bg-white rounded-full flex items-center justify-center p-2"><div class="w-full h-full bg-tertiary rounded-full token-shadow"></div></div>
+<div class="bg-white rounded-full flex items-center justify-center p-2"><div class="w-full h-full bg-tertiary rounded-full token-shadow"></div></div>
+<div class="bg-white rounded-full flex items-center justify-center p-2"><div class="w-full h-full bg-tertiary rounded-full token-shadow"></div></div>
+<div class="bg-white rounded-full flex items-center justify-center p-2 border-4 border-primary transition-all scale-110 shadow-lg cursor-pointer">
+<div class="w-full h-full bg-tertiary rounded-full token-shadow"></div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Dice Chamber (Floating Action Area) -->
+<div class="fixed bottom-0 left-0 right-0 z-50 flex justify-center items-end px-4 pb-8 md:pl-80 pointer-events-none">
+<div class="pointer-events-auto bg-surface-container-lowest p-6 rounded-[4rem] shadow-[0px_-20px_60px_rgba(78,33,32,0.15)] flex flex-col items-center gap-4 border-t-4 border-primary-container">
+<div class="bg-primary/10 px-4 py-1 rounded-full">
+<span class="text-xs font-black tracking-widest text-primary uppercase">Your Turn</span>
+</div>
+<div class="flex items-center gap-8">
+<!-- Last Roll -->
+<div class="flex flex-col items-center opacity-40">
+<span class="text-[10px] font-bold uppercase mb-1">Last Roll</span>
+<div class="w-10 h-10 bg-surface-variant rounded-xl flex items-center justify-center shadow-inner">
+<span class="text-xl font-bold">4</span>
+</div>
+</div>
+<!-- Main Dice Roll Button -->
+<button class="w-24 h-24 bg-gradient-to-br from-[#962700] to-[#ff7851] rounded-3xl shadow-[0px_10px_25px_rgba(171,45,0,0.4)] flex items-center justify-center hover:scale-105 active:scale-95 transition-all group ring-8 ring-primary ring-opacity-10">
+<div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-lg transform group-hover:rotate-12 transition-transform">
+<div class="grid grid-cols-2 grid-rows-2 gap-2 p-3">
+<div class="w-2 h-2 bg-on-surface rounded-full"></div>
+<div class="w-2 h-2 bg-on-surface rounded-full"></div>
+<div class="w-2 h-2 bg-on-surface rounded-full"></div>
+<div class="w-2 h-2 bg-on-surface rounded-full"></div>
+</div>
+</div>
+</button>
+<!-- Timer -->
+<div class="flex flex-col items-center">
+<span class="text-[10px] font-bold uppercase mb-1 text-primary">Timer</span>
+<div class="w-10 h-10 border-4 border-primary rounded-full flex items-center justify-center">
+<span class="text-xs font-bold">12s</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Mobile Nav Shell -->
+<nav class="fixed bottom-0 w-full flex justify-around items-center px-4 pb-6 pt-2 bg-[#ffffff] dark:bg-stone-900 shadow-[0px_-10px_30px_rgba(78,33,32,0.05)] rounded-t-[3rem] z-50 md:hidden">
+<a class="flex flex-col items-center justify-center bg-[#ff7851] text-white rounded-[2rem] px-6 py-2 transition-all hover:scale-110 active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">casino</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] uppercase tracking-[0.05em] font-bold">Play</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#4e2120] opacity-60 px-6 py-2 transition-all hover:scale-110 active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">shopping_bag</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] uppercase tracking-[0.05em] font-bold">Store</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#4e2120] opacity-60 px-6 py-2 transition-all hover:scale-110 active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">forum</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] uppercase tracking-[0.05em] font-bold">Social</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#4e2120] opacity-60 px-6 py-2 transition-all hover:scale-110 active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] uppercase tracking-[0.05em] font-bold">Stats</span>
+</a>
+</nav>
+</body></html>
