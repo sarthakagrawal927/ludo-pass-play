@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "deploy": "pnpm build && wrangler pages deploy dist/ --project-name=ludo-pass-play"
+    "deploy": "pnpm build && wrangler pages deploy dist/ --project-name=ludo-pass-play",
+    "test": "vitest run"
   },
   "keywords": [],
   "author": "",
@@ -19,9 +20,9 @@
     "react-dom": "19.2.5"
   },
   "devDependencies": {
-    "@saas-maker/eslint-config": "workspace:*",
-    "@saas-maker/prettier-config": "workspace:*",
-    "@saas-maker/tsconfig": "workspace:*",
+    "@saas-maker/eslint-config": "^1.0.2",
+    "@saas-maker/prettier-config": "^1.0.0",
+    "@saas-maker/tsconfig": "^1.0.0",
     "@tailwindcss/vite": "4.2.4",
     "@types/node": "25.6.0",
     "@types/react": "19",
